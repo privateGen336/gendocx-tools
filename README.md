@@ -1,46 +1,68 @@
 # GenDocX Tools
 
-**Browser-only document tools — convert images to Word, and merge / split / rotate / sign PDFs without uploading anything.**
+**Five document tools that run entirely in your browser. Nothing is uploaded, nothing is stored, no account required.**
 
-Every byte stays in the tab. There is no server, no API call, no sign-up, and no telemetry. Open DevTools → Network and watch it stay quiet while you work.
+Convert images to Word, merge and sign PDFs, stamp watermarks on DOCX/PDF, compare two versions of a contract, and edit a `.docx` — all with the network panel open and silent.
 
-[中文说明](./README.zh-CN.md)
+[中文说明](./README.zh-CN.md) · [Hosted version](https://gendocx.com/tools)
 
 ---
 
 ## Why this exists
 
-Most "free online converter" sites upload your file to a server you cannot see. For a signed contract or an ID scan, that is a real risk — and you have no way to verify what happens afterwards.
+Most "free online converter" sites upload your file to a server you cannot see. For a signed contract, an ID scan or an internal memo, that is a real risk — and you have no way to check what happens after the upload completes.
 
-These tools take the opposite approach: the entire pipeline runs in the browser.
+These tools take the opposite approach: decode, transform and repack in the tab.
 
-- Images are decoded with `createImageBitmap`, laid out with the `docx` library, and packed into a `.docx` in memory.
-- PDFs are parsed by `pdf.js` inside a Web Worker, edited with `pdf-lib`, and downloaded as a `Blob`.
-- The only network requests are the static assets that load this page.
+- Images are decoded with `createImageBitmap` and packed into OOXML by the `docx` library.
+- PDFs are parsed by `pdf.js` in a Web Worker and edited with `pdf-lib`.
+- DOCX comparison runs on `docxodus` (a .NET engine compiled to WebAssembly) in a worker.
+- The only network requests are the static files that load this page.
 
-The code is MIT-licensed, so you can read it, audit it, fork it, or ship it inside your own product.
+The code is MIT-licensed. Read it, audit it, fork it, or ship it inside your own product.
 
-## What is included
+## What's inside
 
 ### Images → Word
 
 - JPG, PNG, WebP, GIF, AVIF, BMP — up to 50 images at once
-- Drag to reorder, rotate, delete, and preview page breaks as you go
-- Paper size (A4 / Letter / Legal), orientation (auto or locked), images per page
-- Margins (none / narrow / normal / wide), quality (fit or original pixels), JPEG/PNG encoding
-- Output is a real `.docx` you can open in Word, Pages, WPS, Google Docs or LibreOffice
+- Drag to reorder, rotate, delete; page breaks preview live as you change settings
+- Paper size (A4 / Letter), orientation (auto or locked), images per page (1 / 2 / 4)
+- Margins (none / 1 cm / 2 cm / split top-bottom), quality (fit or original pixels), JPEG or PNG encoding
+- Output is a real `.docx` — Word, Pages, WPS, Google Docs and LibreOffice all open it
 
-### PDF tools
+### PDF toolbox
 
-- **Merge** several PDFs into one, in the order you choose
+- **Merge** several files in the order you choose
 - **Split** at a visual cut line, or every N pages
 - **Extract** and **delete** individual pages from a page wall
-- **Rotate** pages, **reorder** by dragging
-- **Flatten** a document (when the source allows it)
+- **Rotate** and **reorder** by dragging
+- **Flatten** a document when the source allows it
 - **Sign** — draw a signature and place it on any page
-- Undo / redo, thumbnail preview before you commit, ZIP download for multi-file results
+- Undo / redo, thumbnail preview before committing, ZIP download for multi-file results
 
-Encrypted PDFs are rejected on purpose: decrypting them requires the password, and silently producing a broken file is worse than saying no.
+### PDF & DOCX watermark
+
+- Works on both `.pdf` and `.docx`
+- Text or image watermark, solid or outline, above or below the content
+- Nine anchor positions, adjustable size and opacity
+- Live variables — `{date}`, `{time}`, `{datetime}`, `{year}`, `{filename}`, `{pages}`
+- Scans an existing file and can strip watermarks you added yourself
+
+Removing a watermark only makes sense on documents you own. Don't use it to pass off someone else's work.
+
+### Compare Word documents
+
+- Drop an original and a modified `.docx`
+- Every revision is listed with its type — insert, delete, format, move
+- Jump between changes in the document preview
+- Export a redline `.docx` with tracked changes intact
+
+### Word editor
+
+- Open a `.docx` and edit it in place: text, tables, lists, images
+- Print or export the result
+- Runs on the `@docx-editor.dev` engine (Apache-2.0), loaded lazily
 
 ## Run it locally
 
@@ -50,59 +72,76 @@ npm run dev        # http://localhost:5173
 ```
 
 ```bash
-npm run build      # static files in dist/
+npm run build      # static output in dist/
 npm run preview    # serve the production build
 ```
 
-Requirements: Node 20.19+ (or 22.12+).
+Node 20.19+ (or 22.12+).
 
 ## Deploy it anywhere
 
-`npm run build` produces a plain static site in `dist/` — no Node runtime needed. `base` is set to `./`, so it also works from a sub-path:
+`npm run build` emits a plain static site — no Node runtime, no server functions. `base` is `./`, so it also works from a sub-path: GitHub Pages, Cloudflare Pages, Netlify, Vercel (static), S3, nginx, Caddy.
 
-- GitHub Pages
-- Cloudflare Pages / Netlify / Vercel (static)
-- An S3 bucket, nginx, Caddy, or a USB stick
-
-## How the no-upload claim is enforced
+## How the no-upload claim holds
 
 There is no upload endpoint to disable — the code never calls one:
 
-- `src/lib/generate-docx.ts` receives an array of `File` objects and returns a `Blob`.
-- `src/lib/pdf-ops.ts` takes `Uint8Array` and returns `Uint8Array`.
-- `src/lib/pdf-preview.ts` renders pages to a `<canvas>` through `pdf.js`.
+- `src/lib/generate-docx.ts` takes `File[]` and returns a `Blob`
+- `src/lib/pdf-ops.ts` takes `Uint8Array` and returns `Uint8Array`
+- `src/lib/watermark/*` rewrites the file bytes in memory
+- `src/lib/docx-compare.worker.ts` runs the comparison engine off the main thread
 
 The only external URL in the UI is the link back to the hosted product.
 
-## Tech stack
+## Hosted versions
 
-React 19 · TypeScript · Vite · `docx` · `pdf-lib` · `pdfjs-dist` · `fflate` · `lucide-react`
+If you would rather not install anything, the same tools run on the GenDocX site. Same code, same "files stay local" behaviour for the standalone tools.
+
+| Tool | Source | Hosted |
+|---|---|---|
+| Images → Word | `src/components/ImageToWord.tsx` | [Image to Word converter](https://gendocx.com/tools/images-to-docx) |
+| PDF toolbox | `src/components/PdfToolbox.tsx` | [Merge, split and sign PDFs](https://gendocx.com/tools/pdf) |
+| Watermark | `src/components/WatermarkTool.tsx` | [Add a watermark to PDF or Word](https://gendocx.com/tools/watermark) |
+| Compare | `src/components/WordCompare.tsx` | [Compare two Word documents](https://gendocx.com/tools/compare) |
+| Editor | `src/components/WordEditor.tsx` | [Edit a Word document online](https://gendocx.com/tools/editor) |
 
 ## Relationship to GenDocX
 
-These tools are the browser-side core of [GenDocX](https://gendocx.com), a document workspace where you edit Word files and talk to an AI agent in the same place.
+These five tools are the browser-side core of [GenDocX](https://gendocx.com) — a document workspace where you edit a Word file and talk to an AI agent in the same window. The agent can read your uploaded files, produce a `.docx`, and hand it back for review, without a separate converter step.
 
-If you would rather not run anything yourself, the same tools are available at **[gendocx.com/tools](https://gendocx.com/tools)** — no install, and the files still never leave your browser for the standalone tools.
+The difference is scope, not trust:
+
+- **This repository** is the standalone toolbox. One file in, one file out, no account, nothing saved.
+- **[gendocx.com](https://gendocx.com)** adds the workspace around them — sessions, file history, an AI agent, and templates. If you want to see what that looks like, [start with the tools page](https://gendocx.com/tools) or read [the docs](https://gendocx.com/docs).
+
+If you only need to convert a batch of scans once, clone this repo and never think about it again. If you need to keep working on the document afterwards, that is what the hosted product is for.
+
+## Tech stack
+
+React 19 · TypeScript · Vite · `docx` · `pdf-lib` · `pdfjs-dist` · `docxodus` · `@docx-editor.dev` · `fflate` · `lucide-react`
 
 ## FAQ
 
 **Do my files get uploaded?**
-No. There is no upload code path. The tools read `File` objects locally and write the result with `URL.createObjectURL`.
+No. There is no upload code path. Files are read locally and written back with `URL.createObjectURL`.
 
 **Can I use it offline?**
-Yes. Build once, serve `dist/` from localhost or open it from any static host; after the page loads, nothing else is fetched.
+Yes. Build once and serve `dist/` from localhost or any static host; after the page loads, nothing else is fetched.
 
 **Does it work with scanned PDFs?**
-For merging, splitting, rotating, deleting and reordering — yes. There is no OCR, so scanned text is not searchable and cannot be edited as text.
+For merging, splitting, rotating, deleting, reordering and watermarking — yes. There is no OCR, so scanned text is not searchable.
 
 **Can it open password-protected PDFs?**
 No. Encrypted files are rejected rather than partially processed.
 
 **Is the output a real .docx?**
-Yes — OOXML generated by the `docx` library, not an HTML file renamed to `.docx`.
+Yes — OOXML generated by the `docx` library, not HTML renamed to `.docx`.
+
+**Why is the bundle large?**
+`docxodus` and the editor engine are WebAssembly and only load when you open Compare or Editor. The other three tools load a much smaller bundle.
 
 **Can I use this commercially?**
-Yes. MIT license. Attribution is appreciated but not required.
+Yes, MIT. Attribution is appreciated but not required.
 
 ## License
 

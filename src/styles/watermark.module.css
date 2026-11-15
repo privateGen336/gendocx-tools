@@ -1,0 +1,217 @@
+/* 与 pdf / compare / editor 共用 app/globals.css 的同一套工具页 token，明暗自动切换。 */
+.page{
+ --ink:var(--tool-ink);--muted:var(--tool-muted);--line:var(--tool-line);
+ --canvas:var(--tool-canvas);--surface:var(--tool-surface);--subtle:var(--tool-subtle);
+ --selected:var(--tool-selected);--hover:var(--tool-hover);
+ --input-border:var(--tool-input-border);--button-ink:var(--color-primary-content);
+ --error:#ad5663;--error-bg:#fbf0f2;--error-border:#efd6db;
+ min-height:100vh;padding-top:64px;background:var(--canvas);color:var(--ink);
+ font-family:var(--font-sans);font-size:var(--type-app);line-height:var(--leading-body);
+}
+:global([data-theme="gendocx-dark"]) .page{
+ --error:#e8a0ad;--error-bg:#422c35;--error-border:#60404c;color-scheme:dark;
+}
+.page button,.page input{font:inherit}
+.page button{cursor:pointer;transition:background .16s,border-color .16s,color .16s,transform .12s ease-out,box-shadow .16s ease-out}
+.page button:disabled{cursor:default;opacity:.6}
+.page button:focus-visible,.page a:focus-visible,.page input:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+
+.dragging{outline:2px dashed var(--color-primary);outline-offset:4px;background:var(--subtle)}
+
+/* 150px 高、纵向居中，和其他两个「把文件变成另一种文件」的工具页同高。 */
+.dropzone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;width:100%;min-height:150px;padding:20px;text-align:center;border:1px dashed var(--input-border);border-radius:var(--radius-card);background:var(--subtle);color:var(--muted)}
+.dropzone:hover:not(:disabled){border-color:var(--color-primary);background:var(--selected)}
+/* 上传区同时展示 Word / PDF 两个格式徽标，选中文件后淡化另一个。 */
+.fileIcons{display:flex;align-items:center;justify-content:center;gap:8px;height:44px;min-width:88px}
+.fileIcon{width:40px;height:44px;flex-shrink:0;display:grid;place-items:center;border-radius:6px;background:color-mix(in oklab,var(--color-primary) 12%,transparent);color:var(--color-primary);transition:opacity .16s}
+.fileIcon i{font-size:26px;line-height:1;display:block}
+.fileIcon svg{display:block}
+.iconPdf{background:color-mix(in oklab,#dc2626 12%,transparent);color:#dc2626}
+.iconDim{opacity:.4}
+.fileIcons>svg{display:block}
+:global([data-theme="gendocx-dark"]) .page .iconPdf{color:#f87171}
+.dropText{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+.dropText strong{font-size:14px;color:var(--ink);font-weight:500}
+.dropText small{font-size:12px;color:var(--muted);line-height:1.6}
+
+.fileRow{display:flex;align-items:center;gap:8px;margin-top:12px;padding:8px 10px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface)}
+.fileRow i{flex-shrink:0;font-size:16px;line-height:1;color:var(--color-primary)}
+.fileRowName{flex:1;min-width:0;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fileRowName small{margin-left:6px;color:var(--muted)}
+.iconButton{display:grid;place-items:center;width:24px;height:24px;flex-shrink:0;padding:0;border:0;border-radius:5px;background:transparent;color:var(--muted)}
+.iconButton:hover{background:var(--selected);color:var(--color-primary)}
+
+/* 模式切换：贴在文件选择面板里，两个选项等宽，选中项浮起。 */
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:14px;padding:4px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--subtle)}
+.modes button{padding:7px 10px;border:0;border-radius:calc(var(--radius-card) - 3px);background:transparent;color:var(--muted);font-size:12px;font-weight:500}
+.modes button:hover{color:var(--ink)}
+.modes button.modeOn{background:var(--surface);color:var(--color-primary);box-shadow:var(--tool-shadow-card)}
+
+/* 添加水印：左边实时预览，右边三个参数。 */
+.markPanel{display:grid;grid-template-columns:minmax(0,.56fr) minmax(0,1fr);gap:22px;margin-top:16px;padding:18px;border:1px solid var(--line);border-radius:var(--radius-overlay);background:var(--surface)}
+/* 预览里放的是文件真实的第一页：PDF 走 pdf.js，Word 用文档里的真段落铺版。
+   不套外框——纸本身就是容器，套两层边框反而把缩略图挤小。
+   cqw 跟着纸宽走，所以缩略图变大变小，水印在纸上的占比始终一致。 */
+.markPreview{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:286px;position:sticky;top:16px;align-self:start}
+.markPage{--page-h:300px;position:relative;display:grid;place-items:center;width:min(100%,calc(var(--page-h,300px) * var(--page-ratio,.707)));aspect-ratio:var(--page-ratio,.707);background:#fff;border:1px solid var(--line);border-radius:2px;box-shadow:0 3px 12px rgba(15,23,42,.12);overflow:hidden;container-type:inline-size}
+/* 纸面内容有一层 z-index，水印网格在 0 或 2 之间切换即可表现「衬底 / 浮于上方」。 */
+.markPageImage{display:block;position:relative;z-index:1;width:100%;height:100%;object-fit:contain}
+.markPageText{display:flex;flex-direction:column;gap:1.8cqw;position:relative;z-index:1;width:100%;height:100%;padding:9cqw 10cqw;overflow:hidden;color:#3d424a}
+.markPageText p{margin:0;font-size:max(4.2px,2.6cqw);line-height:1.62;white-space:pre-wrap;word-break:break-word}
+.markPageText .markPageLead{font-weight:600;font-size:max(5.4px,3.4cqw);margin-bottom:.6cqw}
+/* 水印铺在纸面上：1 枚铺满一格，4/9/16 按 n×n 切格子，每格居中一枚。 */
+.markGrid{position:absolute;inset:0;display:grid;padding:3cqw;place-items:center}
+.markGrid[data-count="2"]{grid-template-columns:minmax(0,1fr);grid-template-rows:repeat(2,minmax(0,1fr))}
+.markGrid[data-count="4"]{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
+.markGrid[data-count="9"]{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr))}
+.markGrid[data-count="16"]{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr))}
+.markOverlay{font-weight:600;letter-spacing:.02em;line-height:1.2;font-size:var(--mark-fs,3.4cqw);white-space:nowrap;transform-origin:center;pointer-events:none}
+.markImageTile{display:block;height:auto;max-width:none;object-fit:contain;transform-origin:center;pointer-events:none}
+.markImagePlaceholder{font-size:2.4cqw;color:var(--muted);text-align:center;pointer-events:none}
+.markPreview .markTag{font-style:normal;font-size:11px;letter-spacing:.04em;color:var(--muted)}
+/* 移除水印：左边原始渲染图，右边水印列表，和添加模式共用 markPage 纸面样式。 */
+.removePanel{display:grid;grid-template-columns:minmax(0,.56fr) minmax(0,1fr);gap:22px;margin-top:16px;padding:18px;border:1px solid var(--line);border-radius:var(--radius-overlay);background:var(--surface)}
+.removePreview{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;min-height:286px;position:sticky;top:16px;align-self:start}
+.removePreview .markTag{font-style:normal;font-size:11px;letter-spacing:.04em;color:var(--muted)}
+.removeList{min-width:0;display:flex;flex-direction:column}
+.removeList .findings{margin-top:0}
+/* 添加水印的操作按钮：贴在渲染图正下方，未完成是「添加水印」，完成后是「下载」。 */
+.markActions{display:flex;flex-direction:column;gap:9px;width:100%;margin-top:4px}
+.markActionsHint{font-size:12px;line-height:1.6;color:var(--muted)}
+.markActionsRow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.markActions .primary,.markActions .ghostAction{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:36px;padding:0 14px;box-sizing:border-box;border-radius:var(--radius-card);font-size:13px;font-weight:500;line-height:1.4;white-space:nowrap}
+.markActions .primary{flex:1;min-width:0}
+.markActions .ghostAction{border:1px solid color-mix(in oklab,var(--ink) 16%,var(--line));background:var(--surface);color:var(--ink)}
+.markActions .ghostAction:hover:not(:disabled){border-color:var(--color-primary);background:var(--selected);color:var(--color-primary)}
+.fieldHidden{display:none}
+.fieldDisabled{opacity:.45;pointer-events:none}
+.fieldHint{font-size:11px;line-height:1.6;color:var(--muted)}
+/* 高级参数：默认展开，可折叠，避免右侧控件列被拉得过长。 */
+.advanced{grid-column:1/-1;padding-top:12px;border-top:1px solid var(--line)}
+.advancedSummary{cursor:pointer;font-size:12px;font-weight:500;color:var(--ink);list-style:none}
+.advancedSummary::-webkit-details-marker{display:none}
+.advancedSummary::before{content:"▸";display:inline-block;margin-right:6px;color:var(--muted)}
+.advanced[open]>.advancedSummary::before{transform:rotate(90deg)}
+.advanced .markFields{margin-top:12px}
+.positionGrid{display:grid;grid-template-columns:repeat(3,18px);grid-template-rows:repeat(3,18px);gap:3px;width:max-content;padding:5px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--subtle)}
+.positionGrid button{width:18px;height:18px;padding:0;border:1px solid var(--line);border-radius:3px;background:var(--surface)}
+.positionGrid button[aria-pressed="true"]{background:var(--color-primary);border-color:var(--color-primary)}
+.tokenRow{display:flex;flex-wrap:wrap;gap:6px}
+.tokenButton{padding:3px 7px;border:1px solid var(--line);border-radius:5px;background:var(--subtle);color:var(--muted);font-size:11px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.tokenButton:hover{border-color:var(--color-primary);color:var(--color-primary)}
+.imagePicker{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.imageThumb{width:36px;height:36px;object-fit:contain;border:1px solid var(--line);border-radius:5px;background:var(--canvas)}
+.presetRow{flex-direction:row;align-items:center;gap:10px;flex-wrap:wrap}.markFields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px;min-width:0;align-content:start}
+.fieldWide{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.field>span{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted)}
+.field em{font-style:normal;font-variant-numeric:tabular-nums;color:var(--muted)}
+.field input{padding:8px 11px;border:1px solid var(--input-border);border-radius:var(--radius-card);background:var(--canvas);color:var(--ink);font-size:13px;min-width:0}
+.field input[type="range"]{padding:0;border:0;background:transparent;accent-color:var(--color-primary);height:20px}
+.segmented{display:inline-flex;align-self:flex-start;gap:4px;padding:3px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--subtle)}
+.segmented button{padding:5px 12px;border:0;border-radius:calc(var(--radius-card) - 2px);background:transparent;color:var(--muted);font-size:12px}
+.segmented button[aria-pressed="true"]{background:var(--surface);color:var(--color-primary);box-shadow:var(--tool-shadow-card)}
+
+/* 颜色：5 个预设 + 一个取色器色块；选中项用一圈主题色描边表示。 */
+.swatches{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:28px}
+.swatch{width:24px;height:24px;flex-shrink:0;padding:0;border:1px solid color-mix(in oklab,var(--ink) 18%,transparent);border-radius:50%;background:var(--swatch,#7a7a7a)}
+.swatch:hover{transform:scale(1.08)}
+.swatch[aria-pressed="true"],.swatchOn{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--color-primary)}
+.swatchCustom{position:relative;overflow:hidden;border:0;background:conic-gradient(from 210deg,#ff6b6b,#ffd166,#7ee787,#5fb8ff,#b58cff,#ff6b6b);cursor:pointer}
+.swatchCustom::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--swatch,#7a7a7a);pointer-events:none}
+.swatchCustom input{position:absolute;inset:-8px;width:calc(100% + 16px);height:calc(100% + 16px);padding:0;border:0;opacity:0;cursor:pointer;z-index:1}
+.swatchCustom input:focus-visible{outline:2px solid var(--color-primary);outline-offset:-2px}
+
+.workspace{max-width:1180px;margin:0 auto;padding:8px 32px 0;scroll-margin-top:80px}
+.workspaceHead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.workspaceHead h2{margin:0;font-size:16px;font-weight:500}
+.workspaceHead h2 small{margin-left:8px;font-size:12px;font-weight:400;color:var(--muted)}
+.headActions{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--muted)}
+.linkButton{padding:0;border:0;background:none;color:var(--color-primary);font-size:12px;text-decoration:underline;text-underline-offset:3px}
+/* 标题行右侧的模式切换按钮；带两级选择器，压过 .page button{font:inherit}。 */
+.headActions .modeSwitch{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface);color:var(--ink);font-size:12px;font-weight:500;white-space:nowrap}
+.headActions .modeSwitch:hover{border-color:var(--color-primary);background:var(--selected);color:var(--color-primary)}
+
+.findings{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.finding{display:flex;align-items:flex-start;gap:11px;padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface);cursor:pointer}
+.finding:hover{border-color:color-mix(in oklab,var(--color-primary) 40%,var(--line))}
+.findingOn{border-color:color-mix(in oklab,var(--color-primary) 45%,var(--line));background:var(--selected)}
+.finding input{margin:2px 0 0;width:15px;height:15px;accent-color:var(--color-primary);flex-shrink:0}
+.findingBody{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.findingTop{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.findingText{font-size:14px;font-weight:500;overflow-wrap:anywhere}
+.badge{display:inline-flex;align-items:center;padding:1px 7px;border:1px solid var(--line);border-radius:999px;background:var(--subtle);color:var(--muted);font-size:11px;line-height:1.6;white-space:nowrap}
+.findingMeta{font-size:12px;color:var(--muted);line-height:1.6}
+
+.manual{margin-top:18px;padding:14px;border:1px dashed var(--input-border);border-radius:var(--radius-card);background:var(--subtle)}
+.manual label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px}
+.manualRow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.manualRow input{flex:1 1 220px;min-width:0;padding:8px 11px;border:1px solid var(--input-border);border-radius:var(--radius-card);background:var(--surface);color:var(--ink);font-size:13px}
+.ghostButton{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface);color:var(--ink);font-size:12px;white-space:nowrap}
+.ghostButton:hover:not(:disabled){border-color:var(--color-primary);background:var(--selected)}
+.manualHint{margin:8px 0 0;font-size:11px;line-height:1.7;color:var(--muted)}
+
+.notice{margin-top:14px;padding:10px 14px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--subtle);color:var(--muted);font-size:12px;line-height:1.75}
+.notice strong{color:var(--ink);font-weight:500}
+
+.actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px}
+.primary{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:11px 18px;border:1px solid var(--color-primary);border-radius:var(--radius-card);background:var(--color-primary);color:var(--button-ink);font-size:13px;font-weight:500;box-shadow:var(--tool-shadow-btn)}
+.primary:hover:not(:disabled){background:var(--color-primary-hover);border-color:var(--color-primary-hover);transform:translateY(-1px);box-shadow:var(--tool-shadow-btn-hover)}
+.primary:active:not(:disabled){transform:translateY(0) scale(.99);box-shadow:var(--tool-shadow-btn)}
+/* 说明文字靠左，主按钮推到这一行的右端。 */
+.actionsHint{font-size:12px;color:var(--muted);min-width:0}
+.actions .primary{margin-left:auto}
+
+.error{display:flex;align-items:flex-start;gap:10px;max-width:1180px;margin:18px auto 0;padding:12px 16px;border:1px solid var(--error-border);border-radius:var(--radius-card);background:var(--error-bg);color:var(--error);font-size:13px}
+.error>span{flex:1}
+.error button{border:0;background:none;color:inherit;padding:0;display:grid;place-items:center}
+
+.result{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px;padding:14px 18px;border:1px solid var(--line);border-radius:var(--radius-overlay);background:var(--surface);box-shadow:var(--tool-shadow-card)}
+.resultIcon{display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border-radius:50%;background:color-mix(in oklab,var(--color-primary) 14%,transparent);color:var(--color-primary)}
+.resultText{flex:1;min-width:200px;display:flex;flex-direction:column;gap:3px}
+.resultText strong{font-size:14px;font-weight:500}
+.resultText small{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.resultActions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+/* 下载 / 再处理一个：主次两个按钮统一成同一规格（等高、同字号、同圆角），
+   原来主按钮比次按钮高出一圈，并排看像两级不同组件。 */
+.resultActions .primary,.resultActions .ghostAction{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:36px;padding:0 14px;box-sizing:border-box;border-radius:var(--radius-card);font-size:13px;font-weight:500;line-height:1.4;white-space:nowrap}
+.resultActions .ghostAction{border:1px solid color-mix(in oklab,var(--ink) 16%,var(--line));background:var(--surface);color:var(--ink)}
+.resultActions .ghostAction:hover:not(:disabled){border-color:var(--color-primary);background:var(--selected);color:var(--color-primary)}
+
+.features{max-width:1116px;margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:56px;border-top:1px solid var(--line);padding:36px 0 64px}
+.seo{max-width:1116px;margin:0 auto}
+.features svg{color:var(--color-primary)}
+.features h2{font-size:14px;font-weight:500;margin:12px 0 8px}
+.features p{font-size:12px;line-height:1.85;color:var(--muted);max-width:300px;margin:0}
+.spin{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:1000px){
+ .workspace{padding-left:28px;padding-right:28px}
+ .features,.seo,.error{margin-left:28px;margin-right:28px}
+ .features{gap:28px}
+}
+@media(max-width:760px){
+ .page{padding-top:48px}
+ .workspace{padding:4px 20px 0}
+ .features,.seo,.error{margin-left:20px;margin-right:20px}
+ .features{grid-template-columns:1fr;gap:28px;padding-bottom:48px}
+ .features p{max-width:none}
+ .workspaceHead{gap:8px}
+ .markPanel{grid-template-columns:1fr;gap:16px;padding:14px}
+ .removePanel{grid-template-columns:1fr;gap:16px;padding:14px}
+ .removePreview{position:static;min-height:272px}
+ .markFields{grid-template-columns:1fr}
+ .fieldWide{grid-column:auto}
+ .markPreview{min-height:272px;position:static}
+ .markPage{--page-h:250px}
+ .result{padding:12px 14px}
+ .resultActions{width:100%}
+ .resultActions .primary,.resultActions .ghostAction{width:100%}
+ .actions .primary{width:100%;margin-left:0}
+}
+@media(prefers-reduced-motion:reduce){
+ .spin{animation:none}
+ .page *{transition:none!important}
+ .page button:hover,.page button:active{transform:none!important}
+}

@@ -1,0 +1,54 @@
+/* 与 word-compare 共用 app/globals.css 的同一组工具页 token；明暗自动切换，
+   这里只保留 editor 独有的错误提示色。 */
+.page{--ink:var(--tool-ink);--muted:var(--tool-muted);--line:var(--tool-line);--canvas:var(--tool-canvas);--surface:var(--tool-surface);--subtle:var(--tool-subtle);--button-ink:var(--color-primary-content);--error:#ad5663;--error-bg:#fbf0f2;--error-border:#efd6db;min-height:100vh;padding-top:64px;background:var(--canvas);color:var(--ink);font-family:var(--font-sans);font-size:var(--type-app);line-height:var(--leading-body)}
+:global([data-theme="gendocx-dark"]) .page{--error:#e8a0ad;--error-bg:#422c35;--error-border:#60404c;color-scheme:dark}
+.page button,.page input{font:inherit}
+.page button{cursor:pointer;transition:background .16s,border-color .16s,color .16s,transform .12s ease-out,box-shadow .16s ease-out}
+.page button:disabled{opacity:.6;cursor:default}
+.page .primary:disabled{opacity:1;background:color-mix(in oklab,var(--color-primary) 26%,var(--surface));border-color:color-mix(in oklab,var(--color-primary) 26%,var(--line));color:color-mix(in oklab,var(--ink) 90%,transparent)}
+.page button:focus-visible,.page a:focus-visible,.page input:focus-visible,.page select:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+.landing{max-width:1180px;padding:0 32px;margin:auto}
+
+
+.upload{text-align:center}
+.dragging{outline:2px dashed var(--color-primary);outline-offset:4px;background:var(--subtle)}
+.uploadIcon{margin:0 auto 24px;width:68px;height:76px;border:1px solid var(--line);background:var(--subtle);color:var(--color-primary);border-radius:var(--radius-card);display:grid;place-items:center;position:relative}
+.uploadIcon i{font-size:32px;line-height:1;display:block}
+.uploadIcon>span{position:absolute;bottom:-6px;right:-8px;border:4px solid var(--surface);width:32px;height:32px;border-radius:50%;background:var(--color-primary);color:var(--button-ink);display:grid;place-items:center}
+.upload h2{font-size:16px;font-weight:500;margin:0 0 8px}
+.upload>h2+p{font-size:12px;color:var(--muted);margin:0 0 24px}
+.primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;background:var(--color-primary);color:var(--button-ink);border:1px solid var(--color-primary);border-radius:var(--radius-card);font-weight:500;font-size:14px;box-shadow:var(--tool-shadow-btn)}
+.upload .primary{width:100%}
+.page .primary:hover:not(:disabled){background:var(--color-primary-hover);border-color:var(--color-primary-hover);transform:translateY(-1px);box-shadow:var(--tool-shadow-btn-hover)}
+.page .primary:active:not(:disabled){transform:translateY(0) scale(.98);box-shadow:var(--tool-shadow-btn)}
+.blank{display:flex;align-items:center;justify-content:center;gap:8px;border:0;border-bottom:1px solid var(--line);color:var(--ink);background:none;padding:16px 0 20px;margin:0 0 16px;width:100%;font-size:14px}
+.features{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:56px;border-top:1px solid var(--line);padding:36px 0 64px}
+.features svg{color:var(--color-primary)}
+.features h2{font-size:14px;font-weight:500;margin:12px 0 8px}
+.features p{font-size:12px;line-height:1.85;color:var(--muted);max-width:280px;margin:0}
+.workspace{height:calc(100dvh - 64px);min-height:460px;display:flex;flex-direction:column}
+.titleIcon{display:inline-flex;align-items:center;font-size:18px;line-height:1;color:var(--color-primary);flex:0 0 auto}
+.titleActions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.titleActions button{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border-radius:6px;border:1px solid var(--doc-border,var(--line));background:var(--doc-surface,var(--surface));color:var(--doc-text,var(--ink));cursor:pointer}
+.titleActions button:hover:not(:disabled){background:var(--subtle);transform:translateY(-1px);box-shadow:var(--tool-shadow-btn-hover)}
+.titleActions button:active:not(:disabled){transform:translateY(0) scale(.98);box-shadow:var(--tool-shadow-btn)}
+.titleActions button:disabled{opacity:.55;cursor:default}
+/* 与 .primary 共用主色与 hover 派生，改品牌色时不再漏掉这一颗按钮。 */
+.titleActions .download{position:relative;background:var(--color-primary);border-color:var(--color-primary);color:var(--button-ink);box-shadow:var(--tool-shadow-btn)}
+.titleActions .download:hover:not(:disabled){background:var(--color-primary-hover);border-color:var(--color-primary-hover)}
+/* Icon-only now, so the unsaved marker sits in the corner instead of pushing the icon.
+   Fixed light fill keeps it readable in both themes, where the button ink flips. */
+.titleActions .downloadDirty::before{content:"";position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px var(--color-primary)}
+.editor{position:relative;flex:1;min-height:0;overflow:hidden}
+.editor>div{height:100%}
+.loading{display:flex;align-items:center;justify-content:center;gap:12px;color:var(--muted);min-height:352px;font-size:13px}
+.error{border:1px solid var(--error-border);background:var(--error-bg);color:var(--error);border-radius:var(--radius-card);padding:12px 16px;margin:0 0 20px;font-size:13px}
+/* 首屏的报错挂在 .landing 的 32/20px 内边距里，靠外边距归零与标题对齐；
+   编辑器是全幅工作区，需要自己留出内缩。 */
+.workspace>.error{margin:12px 20px 0}
+.spin{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:1000px){.landing{padding:0 28px}}
+@media(max-width:760px){.page{padding-top:48px}.landing{padding:0 20px}.features{grid-template-columns:1fr;gap:28px;padding-bottom:36px}.features p{max-width:none}.workspace{height:calc(100dvh - 48px)}}
+@media(prefers-reduced-motion:reduce){.spin{animation:none}.page *{scroll-behavior:auto!important;transition:none!important}.page button:hover,.page button:active{transform:none!important}}
