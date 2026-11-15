@@ -1,0 +1,129 @@
+.page{--ink:var(--tool-ink);--muted:var(--tool-muted);--line:var(--tool-line);min-height:100vh;padding-top:64px;background:var(--tool-canvas);color:var(--tool-ink);font-family:var(--font-sans);font-size:var(--type-app);line-height:var(--leading-body)}
+.page button,.page input,.page select{font:inherit}
+.page button{cursor:pointer;transition:background .16s,border-color .16s,color .16s,transform .12s ease-out,box-shadow .16s ease-out}
+.page button:disabled{cursor:default;opacity:.6}
+.page button:focus-visible,.page a:focus-visible,.page input:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+
+.dropZone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:150px;padding:20px;border:1px dashed var(--tool-input-border);border-radius:var(--radius-card);background:var(--tool-subtle);color:var(--tool-muted);text-align:center;width:100%}
+.dropZone:hover,.dropZoneActive{border-color:var(--color-primary);background:var(--tool-selected);color:var(--tool-ink)}
+.dropZone strong{font-size:14px;font-weight:500;color:var(--tool-ink)}
+.dropZone small{font-size:12px;color:var(--tool-muted)}
+.dropZone svg{color:var(--color-primary)}
+.summary{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.summary span{font-size:12px;color:var(--tool-muted);border:1px solid var(--tool-line);border-radius:999px;padding:3px 9px;background:var(--tool-subtle)}
+.primary{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--color-primary);border:1px solid var(--color-primary);color:var(--color-primary-content);width:100%;padding:12px;border-radius:var(--radius-card);margin-top:16px;font-weight:500;box-shadow:var(--tool-shadow-btn)}
+.page .primary:disabled{opacity:1;background:color-mix(in oklab,var(--color-primary) 26%,var(--tool-surface));border-color:color-mix(in oklab,var(--color-primary) 26%,var(--tool-line));color:var(--tool-ink)}
+.page .primary:hover:not(:disabled){background:var(--color-primary-hover);border-color:var(--color-primary-hover);transform:translateY(-1px);box-shadow:var(--tool-shadow-btn-hover)}
+.page .primary:active:not(:disabled){transform:translateY(0) scale(.98)}
+.progress{display:flex;flex-direction:column;gap:8px;width:100%;margin-top:16px}
+.progressMeta{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:var(--tool-muted)}
+.progressLabel{color:var(--tool-ink);font-weight:500}
+.progressValue{font-variant-numeric:tabular-nums}
+.progressTrack{height:4px;border-radius:999px;background:color-mix(in oklab,var(--tool-ink) 16%,transparent);overflow:hidden}
+.progressFill{height:100%;border-radius:inherit;background:var(--color-primary);transition:width .15s linear}
+
+.error{max-width:1116px;margin:0 auto 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--delete-bg);border:1px solid var(--delete-border);padding:12px 16px;color:var(--delete);border-radius:var(--radius-card);overflow-wrap:anywhere}
+.error button{background:none;border:0;color:inherit;display:flex}
+
+.workspace{max-width:1180px;margin:0 auto 24px;padding:0 32px;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;align-items:start}
+.gridCard{background:var(--tool-surface);border:1px solid var(--tool-line);border-radius:12px;padding:16px;min-width:0}
+.gridHead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.gridHead h2{font-size:15px;font-weight:500;margin:0}
+.gridHead>div{display:flex;align-items:center;gap:8px}
+.countText{font-size:12px;color:var(--tool-muted)}
+.ghostButton{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--tool-line);background:var(--tool-surface);color:var(--tool-muted);border-radius:6px;padding:4px 8px;font-size:12px}
+.ghostButton:hover:not(:disabled){border-color:var(--color-primary);color:var(--color-primary)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+/* A4 proportions: a portrait page fills the frame instead of floating between
+   two wide gutters, which is what a document page wall needs. */
+.thumb{position:relative;border-radius:8px;overflow:hidden;border:1px solid var(--tool-line);background:var(--tool-subtle);aspect-ratio:210/297;transition:border-color .16s,box-shadow .16s}
+.thumb:hover{border-color:var(--tool-input-border);box-shadow:var(--tool-shadow-btn)}
+.thumbDragging{opacity:.45}
+/* Dropped onto the middle of a thumbnail → the two images trade places. */
+.thumbSwap{border-color:var(--color-primary);box-shadow:0 0 0 2px color-mix(in oklab,var(--color-primary) 30%,transparent)}
+.thumbSwap::before{content:"";position:absolute;inset:0;background:color-mix(in oklab,var(--color-primary) 12%,transparent);z-index:3;pointer-events:none}
+/* Dropped in the gutter → the same 3px caret the PDF toolbox draws. A shadow
+   rather than ::after because .thumb clips its children (rounded corners), and
+   an inset line read as a thick blue border instead of a caret. */
+.thumbInsertBefore{box-shadow:-3px 0 0 0 var(--color-primary)}
+.thumbInsertAfter{box-shadow:3px 0 0 0 var(--color-primary)}
+.thumbMedia{width:100%;height:100%;object-fit:contain;display:block;background:var(--tool-subtle)}
+.thumbIndex{position:absolute;left:5px;top:5px;font-size:11px;line-height:1;background:var(--tool-surface);border-radius:4px;padding:2px 5px;color:var(--tool-ink);box-shadow:var(--tool-shadow-btn)}
+.thumbRemove{position:absolute;right:4px;top:4px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;border:0;border-radius:50%;background:rgba(20,26,34,.72);color:#fff}
+.thumbRemove:hover{background:rgba(160,30,30,.9)}
+.thumbBar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:flex-end;gap:3px;padding:5px 6px;background:linear-gradient(transparent,rgba(10,14,20,.55))}
+/* 26×24 matches the enlarged A4 thumbnails; the old 22×20 read as a speck. */
+.thumbBar button{width:26px;height:24px;display:flex;align-items:center;justify-content:center;border:0;border-radius:5px;background:rgba(255,255,255,.18);color:#fff}
+.thumbBar button:hover:not(:disabled){background:rgba(255,255,255,.34)}
+.emptyGrid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:180px;border:1px dashed var(--tool-line);border-radius:8px;color:var(--tool-muted);font-size:13px}
+.gridFooter{margin-top:12px;padding-top:12px;border-top:1px solid var(--tool-line)}
+.gridHint{font-size:12px;color:var(--tool-muted);margin:0;line-height:1.7}
+.gridFooter .primary{margin-top:10px}
+
+.side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.settingsCard,.previewCard{background:var(--tool-surface);border:1px solid var(--tool-line);border-radius:12px;padding:14px}
+.settingsCard h2,.previewCard h2{font-size:14px;font-weight:500;margin:0 0 12px}
+.settingRow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+.settingRow:last-child{margin-bottom:0}
+.settingRow>span{font-size:12px;color:var(--tool-muted)}
+/* A quiet link under the margin row instead of a third button block. */
+.splitMargins{align-self:flex-start;margin:-2px 0 8px 0;padding:0;border:0;background:none;font-size:11px;line-height:1.6;color:var(--tool-muted);text-decoration:underline;text-underline-offset:3px}
+.splitMargins:hover:not(:disabled){color:var(--color-primary)}
+.segmented{display:inline-flex;border:1px solid var(--tool-line);border-radius:6px;overflow:hidden;background:var(--tool-subtle)}
+.segmented button{border:0;background:transparent;padding:3px 7px;font-size:12px;color:var(--tool-muted);border-right:1px solid var(--tool-line)}
+.segmented button:last-child{border-right:0}
+.segmented button[data-active]{background:var(--tool-selected);color:var(--color-primary);font-weight:500}
+.segmented button:hover:not(:disabled):not([data-active]){color:var(--tool-ink)}
+.previewCard{padding:12px 10px 12px}
+.previewHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;padding:0 4px}
+.previewCard .previewHead h2{margin:0}
+.previewCounter{font-size:12px;color:var(--tool-muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.previewNav{display:flex;align-items:center;gap:2px;border-radius:8px}
+.previewNav:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+.previewArrow{flex:0 0 auto;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border:1px solid var(--tool-line);background:var(--tool-surface);color:var(--tool-muted);border-radius:50%}
+.previewArrow:hover:not(:disabled){border-color:var(--color-primary);color:var(--color-primary)}
+.previewFrame{display:flex;justify-content:center;padding:4px 0 8px;flex:1;min-width:0}
+.paper{background:#fff;border:1px solid var(--tool-line);border-radius:2px;box-shadow:var(--tool-shadow-card);box-sizing:border-box;display:flex}
+.paperGrid{display:grid;gap:4px;width:100%;height:100%;grid-template-columns:1fr;grid-template-rows:repeat(var(--paper-rows,1),minmax(0,1fr))}
+.paperGrid[data-per-page="4"]{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.paperCell{background:var(--tool-subtle);border-radius:1px;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--tool-input-border);font-size:10px}
+.paperCell img{width:100%;height:100%;object-fit:contain;display:block}
+.estimate{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--tool-muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--tool-line);padding-left:4px;padding-right:4px}
+.estimate strong{color:var(--tool-ink);font-weight:500}
+.downloadBlock{margin-top:10px;padding-top:10px;border-top:1px solid var(--tool-line);display:flex;flex-direction:column;gap:6px;text-align:center}
+/* Name and numbers share one line: the name gives way first, the meta never wraps. */
+.resultLine{display:flex;align-items:baseline;justify-content:center;gap:0;margin:0;min-width:0;font-size:12px;line-height:1.5}
+.resultName{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tool-ink)}
+.resultName::after{content:"·";margin:0 7px;color:var(--tool-muted);opacity:.6}
+.resultMeta{flex:0 0 auto;color:var(--tool-muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.downloadButton{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px;background:var(--color-primary);border:1px solid var(--color-primary);color:var(--color-primary-content);border-radius:var(--radius-card);padding:9px 10px;font-size:13px;font-weight:500;text-decoration:none;box-shadow:var(--tool-shadow-btn)}
+.downloadButton:hover{background:var(--color-primary-hover);border-color:var(--color-primary-hover);transform:translateY(-1px);box-shadow:var(--tool-shadow-btn-hover)}
+
+.highlights{max-width:1116px;margin:0 auto 24px;border-top:1px solid var(--tool-line);padding:24px 0 0}
+.highlights h2{font-size:18px;font-weight:500;margin:0 0 16px}
+.highlights>div{display:grid;grid-template-columns:repeat(3,1fr);gap:56px}
+.highlights article h3{font-size:14px;font-weight:500;margin:12px 0 8px}
+.highlights article p{font-size:12px;color:var(--tool-muted);max-width:320px;margin:0;line-height:1.8}
+.featureIcon{display:inline-flex;align-items:center;justify-content:center;color:var(--color-primary)}
+
+@media(max-width:1000px){
+
+  .workspace{padding-left:28px;padding-right:28px;grid-template-columns:minmax(0,1fr) 280px}
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .highlights{margin-left:28px;margin-right:28px}
+}
+@media(max-width:760px){
+  .page{padding-top:64px}
+
+  .workspace{padding:0 20px;grid-template-columns:1fr}
+  .side{order:-1}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+  .gridHead{flex-wrap:wrap}
+  .highlights{margin:0 20px 36px;padding-top:24px}
+  .highlights>div{grid-template-columns:1fr;gap:24px}
+  .highlights article p{max-width:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .page *{scroll-behavior:auto!important;transition:none!important}
+  .page button:hover,.page button:active,.thumb:hover{transform:none!important;box-shadow:none!important}
+}

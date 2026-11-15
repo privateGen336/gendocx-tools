@@ -1,0 +1,187 @@
+/* 与 compare / editor 共用 app/globals.css 的同一套工具页 token，明暗自动切换。 */
+.page{
+ --ink:var(--tool-ink);--muted:var(--tool-muted);--line:var(--tool-line);
+ --canvas:var(--tool-canvas);--surface:var(--tool-surface);--subtle:var(--tool-subtle);
+ --selected:var(--tool-selected);--hover:var(--tool-hover);
+ --input-border:var(--tool-input-border);--button-ink:var(--color-primary-content);
+ --error:#ad5663;--error-bg:#fbf0f2;--error-border:#efd6db;
+ --pdf-red:#d93b2b;
+ min-height:100vh;padding-top:64px;background:var(--canvas);color:var(--ink);
+ font-family:var(--font-sans);font-size:var(--type-app);line-height:var(--leading-body);
+}
+:global([data-theme="gendocx-dark"]) .page{
+ --error:#e8a0ad;--error-bg:#422c35;--error-border:#60404c;--pdf-red:#f0746a;color-scheme:dark;
+}
+.page button,.page input,.page textarea,.page select{font:inherit}
+.page button{cursor:pointer;transition:background .16s,border-color .16s,color .16s,transform .12s ease-out,box-shadow .16s ease-out}
+.page button:disabled{cursor:default;opacity:.6}
+.page .primary:disabled{opacity:1;background:color-mix(in oklab,var(--color-primary) 26%,var(--surface));border-color:color-mix(in oklab,var(--color-primary) 26%,var(--line));color:color-mix(in oklab,var(--ink) 90%,transparent)}
+.page button:focus-visible,.page a:focus-visible,.page input:focus-visible,.page textarea:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+
+.dragging{outline:2px dashed var(--color-primary);outline-offset:4px;background:var(--subtle)}
+
+/* 与 images-to-word 的 .dropZone 同款：150px 高、纵向居中的整块拖拽区。
+   高度对齐是有意的——两个工具页在首屏右侧是同一个位置的同一件事。 */
+.dropzone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;width:100%;min-height:150px;padding:20px;text-align:center;border:1px dashed var(--input-border);border-radius:var(--radius-card);background:var(--subtle);color:var(--muted)}
+.dropzone:hover{border-color:var(--color-primary);background:var(--selected)}
+.fileIcon{width:40px;height:44px;flex-shrink:0;display:grid;place-items:center;background:color-mix(in oklab,var(--pdf-red) 13%,transparent);color:var(--pdf-red);border-radius:6px}
+.fileIcon i{font-size:26px;line-height:1;display:block}
+.fileIcon svg{display:block}
+.dropText{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+.dropText strong{font-size:14px;color:var(--ink);font-weight:500}
+.dropText small{font-size:12px;color:var(--muted)}
+
+/* 工作区顶部没有标题块，第一个元素就是文件 chip，所以用固定 32px 而不是 hero 的 48px。 */
+.workspaceIntro{max-width:1180px;margin:0 auto;padding:32px 32px 28px}
+/* Editor state hides the features block, so the page needs its own bottom room. */
+.editorMain{padding-bottom:44px}
+.ghostButton{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface);color:var(--ink);font-size:12px;white-space:nowrap}
+.ghostButton:hover:not(:disabled){border-color:var(--color-primary);background:var(--selected)}
+
+.fileBar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.fileChip{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface);padding:3px 5px 3px 3px}
+.fileChipActive{border-color:var(--color-primary);background:var(--selected)}
+.fileChipName{display:flex;align-items:center;gap:7px;max-width:230px;padding:5px 7px;border:0;background:none;color:var(--ink);font-size:12px}
+.fileChipName span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fileChipName small{color:var(--muted);flex-shrink:0}
+.fileChipName svg{flex-shrink:0;color:var(--color-primary)}
+.fileChipName i{flex-shrink:0;font-size:15px;line-height:1;color:var(--pdf-red)}
+.chipActions{display:flex;gap:1px}
+.chipActions button,.chipRemove{display:grid;place-items:center;width:22px;height:22px;padding:0;border:0;border-radius:4px;background:transparent;color:var(--muted)}
+.chipActions button:hover:not(:disabled),.chipRemove:hover{background:var(--selected);color:var(--color-primary)}
+.fileChipAdd{display:flex;align-items:center;padding:7px 12px;border:1px dashed var(--input-border);border-radius:var(--radius-card);background:transparent;color:var(--muted);font-size:12px}
+.fileChipAdd:hover{border-color:var(--color-primary);color:var(--color-primary)}
+
+.actionRow{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px 0;border-top:1px solid var(--line)}
+.modeBar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0}
+.modeButton{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface);color:var(--muted);font-size:12px;white-space:nowrap}
+.modeButton:hover{border-color:var(--color-primary);color:var(--ink);background:var(--selected)}
+.modeButtonActive{border-color:var(--color-primary);background:var(--selected);color:var(--color-primary)}
+.modeButton[aria-disabled="true"]{opacity:.42;cursor:not-allowed}
+.modeButton[aria-disabled="true"]:hover{border-color:var(--line);color:var(--muted);background:var(--surface)}
+.modeHints{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding:0 0 12px}
+.hintsPrivacy{display:inline-flex;align-items:center;gap:5px;margin-left:auto;font-size:11px;color:var(--muted);white-space:nowrap}
+.linkButton{border:0;background:none;padding:0;color:var(--color-primary);font-size:12px;text-decoration:underline;text-underline-offset:3px}
+.segmented{display:inline-flex;gap:4px}
+.segmented button{padding:5px 10px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface);color:var(--muted);font-size:12px}
+.segmented .segmentActive{border-color:var(--color-primary);background:var(--selected);color:var(--color-primary)}
+.advancedRow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:0 0 14px}
+.advancedRow input{width:180px;padding:7px 10px;border:1px solid var(--input-border);border-radius:var(--radius-card);background:var(--surface);color:var(--ink);font-size:12px}
+.hint{font-size:11px;color:var(--muted);line-height:1.6;margin:0}
+
+.wall{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;gap:10px;min-height:210px;padding:16px;border:1px solid var(--line);border-radius:var(--radius-overlay);background:var(--surface);box-shadow:var(--tool-shadow-card)}
+.wallItem{flex:0 0 auto;position:relative}
+/* Keyboard / touch alternative to HTML5 drag, which does not work in mobile browsers. */
+.reorderControls{display:flex;justify-content:center;gap:4px;margin-top:6px}
+.reorderControls button{display:grid;place-items:center;width:30px;height:24px;border:1px solid var(--line);border-radius:5px;background:var(--surface);color:var(--muted);cursor:pointer}
+.reorderControls button:hover:not(:disabled){border-color:var(--color-primary);color:var(--color-primary)}
+.reorderControls button:disabled{opacity:.4;cursor:not-allowed}
+/* 拖拽语义与图片拼接页一致：卡片中部＝交换，边缘/缝隙＝插入。 */
+.wallSwap .thumb{border-color:var(--color-primary);box-shadow:0 0 0 2px color-mix(in oklab,var(--color-primary) 30%,transparent)}
+.wallInsertBefore::after,.wallInsertAfter::after{content:"";position:absolute;top:0;bottom:0;width:3px;border-radius:2px;background:var(--color-primary);z-index:4;pointer-events:none}
+.wallInsertBefore::after{left:-6px}
+.wallInsertAfter::after{right:-6px}
+/* 186px：1080 与大屏页墙都稳定落在每行 5 张（984 内宽），和图片拼接页同密度。 */
+.thumb{position:relative;width:186px;padding:6px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--subtle);cursor:pointer;transition:border-color .16s,box-shadow .16s,transform .12s}
+.thumb:hover{border-color:var(--color-primary);transform:translateY(-2px)}
+.thumbSelected{outline:2px solid var(--color-primary);outline-offset:-2px;background:var(--selected)}
+.thumb[draggable="true"]{cursor:grab}
+.thumbHead{display:flex;align-items:center;justify-content:space-between;height:16px;font-size:11px;color:var(--muted);padding:0 2px 4px}
+.thumbCheck{display:grid;place-items:center;width:14px;height:14px;border-radius:50%;background:var(--color-primary);color:var(--button-ink)}
+.thumbRotation{font-size:10px;line-height:1;padding:2px 4px;border-radius:3px;background:var(--selected);color:var(--color-primary);font-variant-numeric:tabular-nums}
+.thumbCanvas{position:relative;width:172px;min-height:196px;display:grid;place-items:center;background:var(--surface);border-radius:3px;overflow:hidden;color:var(--muted)}
+.thumbCanvas canvas{display:block;max-width:172px;height:auto}
+.canvasReady{opacity:1}
+.canvasHidden{opacity:0;position:absolute}
+/* A turned page is shorter and wider than the card; a hairline keeps its
+   bounds legible against the same white canvas background. */
+.canvasTurned{box-shadow:0 0 0 1px var(--line)}
+.thumbFailed{font-size:11px;color:var(--muted)}
+.thumbMarks{display:flex;align-items:center;gap:4px}
+.thumbSigned{color:var(--color-primary);font-size:11px;line-height:1}
+.thumbPage{position:relative;line-height:0}
+.signatureLayer{position:absolute;pointer-events:none;object-fit:fill}
+.thumbStatus{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.historyGroup{display:flex;align-items:center;gap:4px}
+.historyButton{display:grid;place-items:center;width:32px;height:32px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface);color:var(--ink);transition:border-color .16s,color .16s,background .16s}
+.historyButton:hover:not(:disabled){border-color:var(--color-primary);color:var(--color-primary);background:var(--selected)}
+.thumbDelete,.thumbRotate{position:absolute;z-index:3;display:grid;place-items:center;width:22px;height:22px;border:0;border-radius:50%;background:rgba(20,26,34,.72);color:#fff;transition:background .16s,transform .12s}
+.thumbDelete{top:4px;right:4px}
+.thumbRotate{bottom:4px;right:4px}
+.thumbDelete:hover,.thumbRotate:hover{transform:scale(1.08)}
+.thumbDelete:hover,.thumbDelete[aria-pressed="true"]{background:#b3222f}
+.thumbRotate:hover,.thumbRotate[aria-pressed="true"]{background:var(--color-primary)}
+
+/* 拆分点：一条贯穿缩略图高度的虚线 + 居中圆点。
+   两个前提缺一不可：① .wall 是 align-items:flex-start，必须 align-self:stretch 才有高度，
+   否则按钮只剩圆点的 18px，虚线塌成 0；② 虚线用绝对定位画整条，圆点靠不透明的
+   --surface 底压在它上面断开——若把 span 当 flex 子项用 flex:1，它会把剩余高度全部
+   吃掉（JSX 里只有一个 span），圆点被挤到最底部。 */
+.splitGap{position:relative;flex:0 0 18px;align-self:stretch;display:flex;align-items:center;justify-content:center;border:0;background:transparent;color:var(--muted);padding:7px 0}
+.splitGap>span{position:absolute;top:7px;bottom:7px;left:50%;width:0;border-left:2px dashed var(--input-border);transform:translateX(-1px)}
+.splitGap>i{position:relative;display:grid;place-items:center;width:18px;height:18px;border-radius:50%;border:1px dashed var(--input-border);background:var(--surface);font-size:12px;font-style:normal;line-height:1}
+.splitGap:hover>span{border-left-color:var(--color-primary)}
+.splitGap:hover>i{border-color:var(--color-primary);color:var(--color-primary)}
+.splitGapActive>span{border-left-color:var(--color-primary)}
+.splitGapActive>i{border:1px solid var(--color-primary);background:var(--color-primary);color:var(--button-ink);font-size:0}
+
+.workspaceTop{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+/* 双类名压过 .primary 的 width:100%（两者单类名同权重，靠顺序不可靠）。 */
+.actionGroup{display:flex;align-items:center;gap:12px;margin-left:auto;min-width:0}
+.actionSummaryText{font-size:12px;color:var(--muted);white-space:nowrap;max-width:260px;overflow:hidden;text-overflow:ellipsis}
+/* 36px 与模式按钮同一视觉重量，但仍是最重的一块。 */
+.page .runButton{width:auto;min-width:0;margin-top:0;padding:9px 16px;font-size:13px}
+.primary{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--color-primary);border:1px solid var(--color-primary);color:var(--button-ink);width:100%;padding:12px;border-radius:var(--radius-card);margin-top:16px;font-weight:500;box-shadow:var(--tool-shadow-btn);white-space:nowrap}
+.page .primary:hover:not(:disabled){background:var(--color-primary-hover);border-color:var(--color-primary-hover);transform:translateY(-1px);box-shadow:var(--tool-shadow-btn-hover)}
+.page .primary:active:not(:disabled){transform:translateY(0) scale(.98);box-shadow:var(--tool-shadow-btn)}
+
+.error{display:flex;align-items:flex-start;gap:10px;max-width:1116px;margin:0 auto 20px;padding:12px 16px;border:1px solid var(--error-border);border-radius:var(--radius-card);background:var(--error-bg);color:var(--error);font-size:13px}
+.error>span{flex:1}
+.error button{border:0;background:none;color:inherit;padding:0;display:grid;place-items:center}
+.notice{max-width:1116px;margin:0 auto 20px;padding:10px 16px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--subtle);color:var(--muted);font-size:12px;line-height:1.7}
+.result{max-width:1116px;margin:0 auto 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 18px;border:1px solid var(--line);border-radius:var(--radius-overlay);background:var(--surface);box-shadow:var(--tool-shadow-card)}
+.result svg{color:var(--color-primary)}
+.resultText{flex:1;min-width:180px;display:flex;flex-direction:column;gap:3px}
+.resultText strong{font-size:14px;font-weight:500}
+.resultText small{font-size:12px;color:var(--muted)}
+.result button{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid var(--color-primary);border-radius:var(--radius-card);background:var(--color-primary);color:var(--button-ink);font-size:13px;font-weight:500}
+.result button:hover{background:var(--color-primary-hover);transform:translateY(-1px)}
+
+.features{max-width:1116px;margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:56px;border-top:1px solid var(--line);padding:36px 0 64px}
+/* SEO 说明区由共享组件渲染（内部只有 Tailwind 工具类），必须和 .features 用同一套宽度与留白，否则会贴到视口两端。 */
+.seo{max-width:1116px;margin:0 auto}
+.seoAfterEditor{margin-top:56px;padding-top:32px;border-top:1px solid var(--line)}
+.features svg{color:var(--color-primary)}
+.features h2{font-size:14px;font-weight:500;margin:12px 0 8px}
+.features p{font-size:12px;line-height:1.85;color:var(--muted);max-width:280px;margin:0}
+.spin{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.overlay{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px;background:color-mix(in oklab,var(--ink) 55%,transparent)}
+.overlayPanel{width:min(940px,100%);max-height:90vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-overlay);box-shadow:var(--tool-shadow-lift);padding:20px}
+.overlayHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.overlayHead h2{font-size:16px;font-weight:500;margin:0}
+.headActions{display:flex;align-items:center;gap:8px}
+.page .headPrimary{width:auto;min-width:0;margin-top:0;padding:8px 14px;font-size:13px}
+.overlayClose{display:grid;place-items:center;width:28px;height:28px;border:0;border-radius:var(--radius-card);background:transparent;color:var(--muted)}
+.overlayClose:hover{background:var(--selected);color:var(--ink)}
+.overlayBody{display:grid;grid-template-columns:260px minmax(0,1fr);gap:22px;padding-top:18px}
+.overlayInk,.overlayPreview{display:flex;flex-direction:column;gap:8px;min-width:0}
+.slotLabel{display:block;font-size:12px;color:var(--muted)}
+.signPad{border:1px dashed var(--input-border);border-radius:var(--radius-card);background:var(--canvas);width:100%;height:96px;display:block;touch-action:none;cursor:crosshair}
+.signRow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.signRow>span{flex:1 1 100%;font-size:11px;color:var(--muted);line-height:1.6}
+.signRow button{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--subtle);color:var(--muted);font-size:12px}
+.signRow button:hover{background:var(--selected);color:var(--ink)}
+.field{display:flex;flex-direction:column;gap:6px}
+.field>label{font-size:12px;color:var(--muted)}
+.field input[type="range"]{width:100%;padding:0;border:0;background:transparent;accent-color:var(--color-primary)}
+.signPreview{position:relative;width:min(520px,100%);border:1px solid var(--line);border-radius:var(--radius-card);overflow:hidden;background:var(--canvas);align-self:flex-start}
+.signPreview>canvas{display:block;width:100%;height:auto}
+.signBox{position:absolute;border:2px dashed var(--color-primary);background:color-mix(in oklab,var(--color-primary) 14%,transparent);display:grid;place-items:center;cursor:move;touch-action:none;color:var(--color-primary);font-size:16px}
+.signBoxInk{width:100%;height:100%;object-fit:fill;pointer-events:none}
+.overlayError{color:var(--error);font-size:12px;margin:12px 0 0}
+
+@media(max-width:1000px){.workspaceIntro{padding-left:28px;padding-right:28px}.features,.error,.notice,.result,.seo{margin-left:28px;margin-right:28px}.features{gap:28px}}
+@media(max-width:760px){.page{padding-top:64px}.workspaceIntro{padding:28px 16px}.features,.error,.notice,.result,.seo{margin-left:20px;margin-right:20px}.features{grid-template-columns:1fr;gap:28px}.features p{max-width:none}.wall{gap:6px;padding:10px;align-content:flex-start}.thumb{width:104px}.thumbCanvas{width:92px;min-height:130px}.thumbCanvas canvas{max-width:92px}.splitGap{flex-basis:12px}.overlayBody{grid-template-columns:1fr}.overlay{padding:10px}.actionGroup{width:100%;justify-content:space-between}.modeBar{flex-wrap:wrap}.overlayHead{flex-wrap:wrap}.overlayHead h2{flex:1 1 100%}.headActions{width:100%;justify-content:flex-end}}
+@media(prefers-reduced-motion:reduce){.spin{animation:none}.page *{transition:none!important}.page button:hover,.page button:active,.thumb:hover{transform:none!important}}

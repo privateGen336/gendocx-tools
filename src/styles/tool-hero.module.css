@@ -1,0 +1,180 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--tool-aside);
+  align-items: center;
+  gap: 80px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: var(--tool-hero-pad-top) 32px var(--tool-hero-pad-bottom);
+}
+
+.layout > * {
+  min-width: 0;
+}
+
+/* 标题上方的一行位置提示。字号压到 12.5px、颜色用 muted，让它在 h1 之前
+   只是一条引子；链接 hover 才出现主色，避免和下面的大标题抢。 */
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 14px;
+  color: var(--tool-muted);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.breadcrumb a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.breadcrumb a:hover {
+  color: var(--color-primary);
+}
+
+.breadcrumb a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.breadcrumbSep {
+  opacity: 0.45;
+}
+
+.copy h1 {
+  max-width: 472px;
+  margin: 0 0 16px;
+  font-size: clamp(34px, 4vw, 46px);
+  font-weight: 500;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+/* 标题前的工具图标：字形和顶栏、/tools 卡片是同一枚，尺寸跟着标题走
+   （0.72em），颜色由 .tool-tone-* 给。
+   vertical-align 的 em 取的是图标自己的字号（0.72 × 标题），0.18em ≈ 标题的
+   0.13em：正好把图标抬到汉字墨迹框和拉丁大写字母高度中间那一档 —— 汉字在
+   基线下还压着 0.15em，直接按基线对齐会显得挂低了。 */
+.copy h1 .titleIcon {
+  margin-inline-end: 0.24em;
+  font-size: 0.72em;
+  line-height: 1;
+  vertical-align: 0.18em;
+}
+
+.copy > p {
+  max-width: 430px;
+  margin: 0;
+  color: var(--tool-muted);
+  font-size: 15px;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.panel {
+  padding: var(--tool-panel-pad);
+  border: 1px solid var(--tool-line);
+  border-radius: var(--radius-overlay);
+  background: var(--tool-surface);
+  box-shadow: var(--tool-shadow-card);
+}
+
+.panelHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.panelHeading h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.panelHeading > span {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border: 1px solid var(--tool-line);
+  border-radius: 6px;
+  color: var(--tool-muted);
+  font-size: 12px;
+}
+
+.demo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-primary);
+}
+
+.demo:hover:not(:disabled) {
+  color: var(--color-primary-hover);
+}
+
+.demo i {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.demo svg {
+  flex-shrink: 0;
+}
+
+.privacy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 12px 0 0;
+  color: var(--tool-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.privacy svg {
+  flex-shrink: 0;
+}
+
+@media (max-width: 1000px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) var(--tool-aside-md);
+    gap: 32px;
+    padding-inline: 28px;
+  }
+}
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    padding: 32px 20px;
+  }
+
+  .copy h1 {
+    font-size: 32px;
+  }
+
+  .breadcrumb {
+    margin-bottom: 10px;
+    font-size: 12px;
+  }
+
+  .copy > p {
+    font-size: 14px;
+  }
+
+  .demo {
+    margin-top: 20px;
+  }
+}

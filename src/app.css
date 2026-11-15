@@ -1,0 +1,322 @@
+/*
+ * Shared tokens for the ported tool pages.
+ * Values mirror the GenDocX site (app/globals.css) so the open-source build
+ * looks like the hosted product instead of a stripped-down fork.
+ */
+:root {
+  --color-primary: #2563eb;
+  --color-primary-content: #fafafa;
+  --color-primary-hover: #1d4ed8;
+
+  --tool-canvas: #f7f9fc;
+  --tool-surface: #ffffff;
+  --tool-subtle: #fafbfd;
+  --tool-workspace: #edf1f6;
+  --tool-ink: #293443;
+  --tool-muted: #6b7280;
+  --tool-line: #e0e5ed;
+  --tool-input-border: #cbd4e2;
+  --tool-selected: color-mix(in oklab, var(--color-primary) 10%, var(--tool-surface));
+  --tool-hover: color-mix(in oklab, var(--color-primary) 5%, var(--tool-surface));
+
+  --tool-shadow-card: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.1);
+  --tool-shadow-lift: 0 4px 8px rgba(16, 24, 40, 0.06), 0 8px 16px rgba(16, 24, 40, 0.08);
+  --tool-shadow-btn: 0 1px 2px rgba(16, 24, 40, 0.08);
+  --tool-shadow-btn-hover: 0 1px 2px rgba(16, 24, 40, 0.06), 0 4px 10px rgba(16, 24, 40, 0.08);
+
+  --tool-hero-pad-top: 48px;
+  --tool-hero-pad-bottom: 48px;
+  --tool-panel-pad: 24px;
+  --tool-aside: 472px;
+  --tool-aside-md: 440px;
+
+  --radius-card: 0.5rem;
+  --radius-overlay: 0.75rem;
+  --font-sans: "Inter", ui-sans-serif, system-ui, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --type-app: 14px;
+  --type-caption: 14px;
+  --leading-body: 1.6;
+
+  --chrome-bg: rgba(255, 255, 255, 0.86);
+  --chrome-border: #e0e5ed;
+  --chrome-ink: #293443;
+  --chrome-muted: #6b7280;
+  --chrome-hover: #f1f5fb;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: oklch(0.65 0.21 258);
+    --color-primary-content: oklch(0.13 0.02 260);
+    --color-primary-hover: oklch(0.7 0.18 258);
+
+    --tool-canvas: #191f27;
+    --tool-surface: #222a34;
+    --tool-subtle: #262f3b;
+    --tool-workspace: #151b23;
+    --tool-ink: #d9e1ed;
+    --tool-muted: #9aa8bb;
+    --tool-line: #303945;
+    --tool-input-border: #465267;
+    --tool-selected: color-mix(in oklab, var(--color-primary) 18%, var(--tool-surface));
+    --tool-hover: color-mix(in oklab, var(--color-primary) 8%, var(--tool-surface));
+
+    --tool-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.35);
+    --tool-shadow-lift: 0 4px 8px rgba(0, 0, 0, 0.45), 0 8px 16px rgba(0, 0, 0, 0.3);
+    --tool-shadow-btn: 0 1px 2px rgba(0, 0, 0, 0.45);
+    --tool-shadow-btn-hover: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 10px rgba(0, 0, 0, 0.3);
+
+    --chrome-bg: rgba(25, 31, 39, 0.86);
+    --chrome-border: #303945;
+    --chrome-ink: #d9e1ed;
+    --chrome-muted: #9aa8bb;
+    --chrome-hover: #262f3b;
+
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--tool-canvas);
+  color: var(--tool-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Top bar ─────────────────────────────────────────────────────────────
+   64px fixed, matching the `.page { padding-top: 64px }` the tool sheets
+   were written against. */
+.app-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 40;
+  height: 64px;
+  border-bottom: 1px solid var(--chrome-border);
+  background: var(--chrome-bg);
+  backdrop-filter: saturate(1.4) blur(10px);
+  color: var(--chrome-ink);
+}
+
+.app-header-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--color-primary);
+  color: var(--color-primary-content);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.brand-name em {
+  font-style: normal;
+  color: var(--chrome-muted);
+}
+
+.tool-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.tool-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 11px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--chrome-muted);
+  font: inherit;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.tool-tab:hover {
+  background: var(--chrome-hover);
+  color: var(--chrome-ink);
+}
+
+.tool-tab.is-active {
+  border-color: color-mix(in oklab, var(--color-primary) 28%, transparent);
+  background: var(--tool-selected);
+  color: var(--color-primary);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.ghost-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--chrome-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--chrome-muted);
+  font: inherit;
+  font-size: 12.5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.ghost-button:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.online-link {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: var(--color-primary-content);
+  font-size: 12.5px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s, transform 0.12s;
+}
+
+.online-link:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+/* ── Footer ───────────────────────────────────────────────────────────── */
+.app-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 20px 20px 40px;
+  border-top: 1px solid var(--chrome-border);
+  color: var(--chrome-muted);
+  font-size: 12.5px;
+}
+
+.app-footer p {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.app-footer a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-footer a:hover {
+  color: var(--color-primary);
+}
+
+/* Keep the bar to one row: drop the labels that carry the least information
+   first, then the brand word, then the tab labels. The tool pages themselves
+   still announce what they are in the h1. */
+@media (max-width: 760px) {
+  .brand-name em {
+    display: none;
+  }
+
+  .source-link span {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .brand-name {
+    display: none;
+  }
+
+  .tool-tabs {
+    margin-left: 0;
+  }
+
+  .tool-tab span {
+    display: none;
+  }
+
+  .tool-tab,
+  .ghost-button,
+  .online-link {
+    padding: 0 9px;
+  }
+}
+
+/* Portalled hover tooltip used by the tool pages. The site version reads
+   daisyUI's --color-base-* tokens; these map to the tool surface instead. */
+.icon-tooltip {
+  background: var(--tool-surface);
+  color: var(--tool-ink);
+  border: 1px solid var(--tool-line);
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 4px 8px;
+  border-radius: 6px;
+  max-width: min(18rem, calc(100vw - 16px));
+  overflow-wrap: anywhere;
+  box-shadow: 0 2px 8px oklch(0 0 0 / 0.15);
+  animation: tooltipFadeIn 0.15s ease;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
