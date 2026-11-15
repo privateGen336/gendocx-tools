@@ -1,0 +1,8 @@
+# Keep the repo LF on every platform; contributors on Windows otherwise
+# commit CRLF and the diffs churn.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.pdf binary
+*.docx binary
