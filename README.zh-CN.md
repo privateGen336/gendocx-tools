@@ -1,8 +1,8 @@
 # GenDocX Tools
 
-**五个纯浏览器文档工具：文件不上传、不落盘、不需要账号。**
+**六个纯浏览器文档工具：文件不上传、不落盘、不需要账号。**
 
-图片拼成 Word、PDF 合并签名、给 PDF/Word 加水印、对比两版合同、直接编辑 `.docx` —— 打开 Network 面板操作，它一直是安静的。
+图片拼成 Word、Markdown 转成有版式的 `.docx`、PDF 合并签名、给 PDF/Word 加水印、对比两版合同、直接编辑 `.docx` —— 打开 Network 面板操作，它一直是安静的。
 
 [English](./README.md) · [在线版](https://gendocx.com/zh/tools)
 
@@ -58,6 +58,14 @@
 - 在预览里逐条跳转定位
 - 导出保留修订标记的 redline `.docx`
 
+### Markdown 转 Word
+
+- 粘贴 Markdown 或打开 `.md` 文件，选一种版式，下载 `.docx`
+- 标题、表格、代码块、列表、链接和图片都是 Word 原生元素，不是截图
+- LaTeX `$...$` 与 `$$...$$` 转成可编辑的 Word 公式
+- 标准 / 紧凑 / 报告 / 公文四套版式；公文按 GB/T 9704 的版心、仿宋三号正文和首行缩进两字符
+- 预览渲染的是生成后的 `.docx` 本身，也就是你下载下来的那个文件
+
 ### Word 编辑器
 
 - 打开 `.docx` 就地编辑：文字、表格、列表、图片
@@ -100,6 +108,7 @@ Node 20.19+（或 22.12+）。
 | 工具 | 源码 | 在线版 |
 |---|---|---|
 | 图片转 Word | `src/components/ImageToWord.tsx` | [图片拼成 Word](https://gendocx.com/zh/tools/images-to-docx) |
+| Markdown 转 Word | `src/components/MarkdownToWord.tsx` | [Markdown 转 Word](https://gendocx.com/zh/tools/markdown-to-docx) |
 | PDF 工具箱 | `src/components/PdfToolbox.tsx` | [PDF 合并、拆分、签名](https://gendocx.com/zh/tools/pdf) |
 | 水印 | `src/components/WatermarkTool.tsx` | [给 PDF 或 Word 加水印](https://gendocx.com/zh/tools/watermark) |
 | 文档对比 | `src/components/WordCompare.tsx` | [对比两版 Word 文档](https://gendocx.com/zh/tools/compare) |
@@ -107,7 +116,7 @@ Node 20.19+（或 22.12+）。
 
 ## 和 GenDocX 是什么关系
 
-这五个工具是 [GenDocX](https://gendocx.com) 的浏览器端核心。GenDocX 是一个文档工作台：在同一个窗口里编辑 Word 文件，同时和 AI agent 对话。agent 能读你上传的文件、产出 `.docx`、再交回来给你审阅，不需要另开一个转换站。
+这六个工具是 [GenDocX](https://gendocx.com) 的浏览器端核心。GenDocX 是一个文档工作台：在同一个窗口里编辑 Word 文件，同时和 AI agent 对话。agent 能读你上传的文件、产出 `.docx`、再交回来给你审阅，不需要另开一个转换站。
 
 区别在范围，不在可信度：
 

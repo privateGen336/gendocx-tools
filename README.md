@@ -1,8 +1,8 @@
 # GenDocX Tools
 
-**Five document tools that run entirely in your browser. Nothing is uploaded, nothing is stored, no account required.**
+**Six document tools that run entirely in your browser. Nothing is uploaded, nothing is stored, no account required.**
 
-Convert images to Word, merge and sign PDFs, stamp watermarks on DOCX/PDF, compare two versions of a contract, and edit a `.docx` — all with the network panel open and silent.
+Convert images to Word, turn Markdown into a styled `.docx`, merge and sign PDFs, stamp watermarks on DOCX/PDF, compare two versions of a contract, and edit a `.docx` — all with the network panel open and silent.
 
 [中文说明](./README.zh-CN.md) · [Hosted version](https://gendocx.com/tools)
 
@@ -58,6 +58,14 @@ Removing a watermark only makes sense on documents you own. Don't use it to pass
 - Jump between changes in the document preview
 - Export a redline `.docx` with tracked changes intact
 
+### Markdown to Word
+
+- Paste Markdown or open a `.md` file, pick one of four layouts, download a `.docx`
+- Headings, tables, code blocks, lists, links and images land as native Word elements, not a screenshot
+- LaTeX `$...$` and `$$...$$` become editable Word equations
+- Standard, Compact, Report and Official presets — the last follows GB/T 9704 margins, 仿宋 body at 16pt and a two-character first-line indent
+- The preview renders the generated `.docx` back into the page, so it is the file you download
+
 ### Word editor
 
 - Open a `.docx` and edit it in place: text, tables, lists, images
@@ -100,6 +108,7 @@ If you would rather not install anything, the same tools run on the GenDocX site
 | Tool | Source | Hosted |
 |---|---|---|
 | Images → Word | `src/components/ImageToWord.tsx` | [Image to Word converter](https://gendocx.com/tools/images-to-docx) |
+| Markdown → Word | `src/components/MarkdownToWord.tsx` | [Markdown to Word](https://gendocx.com/tools/markdown-to-docx) |
 | PDF toolbox | `src/components/PdfToolbox.tsx` | [Merge, split and sign PDFs](https://gendocx.com/tools/pdf) |
 | Watermark | `src/components/WatermarkTool.tsx` | [Add a watermark to PDF or Word](https://gendocx.com/tools/watermark) |
 | Compare | `src/components/WordCompare.tsx` | [Compare two Word documents](https://gendocx.com/tools/compare) |
@@ -107,7 +116,7 @@ If you would rather not install anything, the same tools run on the GenDocX site
 
 ## Relationship to GenDocX
 
-These five tools are the browser-side core of [GenDocX](https://gendocx.com) — a document workspace where you edit a Word file and talk to an AI agent in the same window. The agent can read your uploaded files, produce a `.docx`, and hand it back for review, without a separate converter step.
+These six tools are the browser-side core of [GenDocX](https://gendocx.com) — a document workspace where you edit a Word file and talk to an AI agent in the same window. The agent can read your uploaded files, produce a `.docx`, and hand it back for review, without a separate converter step.
 
 The difference is scope, not trust:
 
