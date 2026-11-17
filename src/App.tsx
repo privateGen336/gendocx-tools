@@ -1,19 +1,21 @@
 import { useEffect, useState } from 'react'
-import { Code2, Droplets, FileImage, FileText, GitCompare, PenLine, ShieldCheck } from 'lucide-react'
+import { Code2, Droplets, FileCode2, FileImage, FileText, GitCompare, PenLine, ShieldCheck } from 'lucide-react'
 import ImageToWord from './components/ImageToWord'
+import MarkdownToWord from './components/MarkdownToWord'
 import PdfToolbox from './components/PdfToolbox'
 import WatermarkTool from './components/WatermarkTool'
 import WordCompare from './components/WordCompare'
 import WordEditor from './components/WordEditor'
 import { useLang } from './i18n'
 
-type Tool = 'images-to-docx' | 'pdf' | 'watermark' | 'compare' | 'editor'
+type Tool = 'images-to-docx' | 'markdown-to-docx' | 'pdf' | 'watermark' | 'compare' | 'editor'
 
-const TOOLS: Tool[] = ['images-to-docx', 'pdf', 'watermark', 'compare', 'editor']
+const TOOLS: Tool[] = ['images-to-docx', 'markdown-to-docx', 'pdf', 'watermark', 'compare', 'editor']
 
 const UI = {
   zh: {
     'images-to-docx': '图片转 Word',
+    'markdown-to-docx': 'Markdown 转 Word',
     pdf: 'PDF 工具箱',
     watermark: 'PDF 水印',
     compare: '文档对比',
@@ -26,6 +28,7 @@ const UI = {
   },
   en: {
     'images-to-docx': 'Images to Word',
+    'markdown-to-docx': 'Markdown to Word',
     pdf: 'PDF tools',
     watermark: 'PDF watermark',
     compare: 'Compare docs',
@@ -40,6 +43,7 @@ const UI = {
 
 const ICONS = {
   'images-to-docx': FileImage,
+  'markdown-to-docx': FileCode2,
   pdf: FileText,
   watermark: Droplets,
   compare: GitCompare,
@@ -70,6 +74,7 @@ export function App() {
 
   const panels: Record<Tool, React.ReactNode> = {
     'images-to-docx': <ImageToWord />,
+    'markdown-to-docx': <MarkdownToWord />,
     pdf: <PdfToolbox />,
     watermark: <WatermarkTool />,
     compare: <WordCompare />,

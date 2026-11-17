@@ -1,5 +1,25 @@
 // Generated from the GenDocX site copy (zh). Edit this file directly.
 export const zh = {
+  "markdownToWord": {
+      "title": "Markdown 转 Word",
+      "description": "粘贴 Markdown 或打开本地文件，四种版式任选，导出可在 Word 里继续编辑的 .docx。右侧预览渲染的是真实文件，转换全部在浏览器内完成。",
+      "open": "打开文件",
+      "trySample": "试用示例",
+      "style": "版式",
+      "standard": "标准",
+      "compact": "紧凑",
+      "report": "报告",
+      "official": "公文",
+      "download": "下载 DOCX",
+      "working": "转换中…",
+      "rendering": "重新排版…",
+      "preview": "预览",
+      "placeholder": "在此粘贴 Markdown",
+      "privacy": "文件不上传",
+      "tooLarge": "文件或文本不能超过 1 MB。",
+      "failed": "转换失败，请重试。",
+      "sample": "# 项目启动说明\n\n**目标：** 在两周内完成上线准备，并把交付物整理成可直接发出的 Word 文档。\n\n## 下一步\n\n1. 复核初稿\n2. 确认负责人\n3. 分发终稿\n\n| 事项 | 状态 | 负责人 |\n| --- | --- | --- |\n| 初稿 | 已完成 | 王 |\n| 排版 | 进行中 | 李 |\n\n> 注意：所有金额以财务确认的版本为准。\n\n```text\n上线检查清单\n- 域名解析\n- 备份\n```\n"
+    },
     "imageToWord": {
       "title": "图片排版成 Word",
       "description": "把 JPG、PNG、WebP 或 GIF 排入一份 DOCX，可调整顺序、每页张数和页边距。图片在浏览器本地处理，文档中的内容仍为图片。",

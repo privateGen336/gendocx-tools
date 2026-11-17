@@ -1,5 +1,25 @@
 // Generated from the GenDocX site copy (en). Edit this file directly.
 export const en = {
+  "markdownToWord": {
+      "title": "Markdown to Word",
+      "description": "Paste Markdown or open a local file, pick one of four layouts, and download a .docx you can keep editing in Word. The preview renders the real file, and everything happens in this browser.",
+      "open": "Open file",
+      "trySample": "Try a sample",
+      "style": "Layout",
+      "standard": "Standard",
+      "compact": "Compact",
+      "report": "Report",
+      "official": "Official",
+      "download": "Download DOCX",
+      "working": "Converting…",
+      "rendering": "Re-laying out…",
+      "preview": "Preview",
+      "placeholder": "Paste Markdown here",
+      "privacy": "Not uploaded",
+      "tooLarge": "The file or text must stay under 1 MB.",
+      "failed": "Conversion failed. Try again.",
+      "sample": "# Project brief\n\n**Goal:** be ready to launch in two weeks, with a document you can send as-is.\n\n## Next steps\n\n1. Review the draft\n2. Confirm the owner\n3. Send the final version\n\n| Item | Status | Owner |\n| --- | --- | --- |\n| Draft | Done | Wang |\n| Layout | In progress | Li |\n\n> Amounts follow the finance-approved version.\n\n```text\nLaunch checklist\n- DNS\n- Backup\n```\n"
+    },
     "imageToWord": {
       "title": "Arrange images in Word",
       "description": "Arrange JPG, PNG, WebP, or GIF files in a DOCX. Set image order, images per page, and margins. Processing happens in the browser and the images remain images in Word.",
