@@ -10,6 +10,19 @@
 
 ---
 
+## 在线版
+
+不想装任何东西的话，同样的工具在 GenDocX 上可以直接用。同一套代码，独立工具这部分同样「文件不离开浏览器」。
+
+| 工具 | 源码 | 在线版 |
+|---|---|---|
+| 图片转 Word | `src/components/ImageToWord.tsx` | [图片拼成 Word](https://gendocx.com/zh/tools/images-to-docx) |
+| Markdown 转 Word | `src/components/MarkdownToWord.tsx` | [Markdown 转 Word](https://gendocx.com/zh/tools/markdown-to-docx) |
+| PDF 工具箱 | `src/components/PdfToolbox.tsx` | [PDF 合并、拆分、签名](https://gendocx.com/zh/tools/pdf) |
+| 水印 | `src/components/WatermarkTool.tsx` | [给 PDF 或 Word 加水印](https://gendocx.com/zh/tools/watermark) |
+| 文档对比 | `src/components/WordCompare.tsx` | [对比两版 Word 文档](https://gendocx.com/zh/tools/compare) |
+| 编辑器 | `src/components/WordEditor.tsx` | [在线编辑 Word 文档](https://gendocx.com/zh/tools/editor) |
+
 ## 为什么做这个
 
 大多数「免费在线转换」网站会把文件传到你看不见的服务器上。一份签好的合同、一张证件扫描件、一份内部备忘，传过去之后发生了什么，你没有任何办法验证。
@@ -102,19 +115,6 @@ Node 20.19+（或 22.12+）。
 - `src/lib/docx-compare.worker.ts` 把对比引擎放在主线程之外
 
 界面上唯一的外部 URL，是指回在线产品的那个链接。
-
-## 在线版
-
-不想装任何东西的话，同样的工具在 GenDocX 上可以直接用。同一套代码，独立工具这部分同样「文件不离开浏览器」。
-
-| 工具 | 源码 | 在线版 |
-|---|---|---|
-| 图片转 Word | `src/components/ImageToWord.tsx` | [图片拼成 Word](https://gendocx.com/zh/tools/images-to-docx) |
-| Markdown 转 Word | `src/components/MarkdownToWord.tsx` | [Markdown 转 Word](https://gendocx.com/zh/tools/markdown-to-docx) |
-| PDF 工具箱 | `src/components/PdfToolbox.tsx` | [PDF 合并、拆分、签名](https://gendocx.com/zh/tools/pdf) |
-| 水印 | `src/components/WatermarkTool.tsx` | [给 PDF 或 Word 加水印](https://gendocx.com/zh/tools/watermark) |
-| 文档对比 | `src/components/WordCompare.tsx` | [对比两版 Word 文档](https://gendocx.com/zh/tools/compare) |
-| 编辑器 | `src/components/WordEditor.tsx` | [在线编辑 Word 文档](https://gendocx.com/zh/tools/editor) |
 
 ## 和 GenDocX 是什么关系
 

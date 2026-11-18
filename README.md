@@ -10,6 +10,19 @@ Convert images to Word, turn Markdown into a styled `.docx`, merge and sign PDFs
 
 ---
 
+## Hosted versions
+
+If you would rather not install anything, the same tools run on the GenDocX site. Same code, same "files stay local" behaviour for the standalone tools.
+
+| Tool | Source | Hosted |
+|---|---|---|
+| Images → Word | `src/components/ImageToWord.tsx` | [Image to Word converter](https://gendocx.com/tools/images-to-docx) |
+| Markdown → Word | `src/components/MarkdownToWord.tsx` | [Markdown to Word](https://gendocx.com/tools/markdown-to-docx) |
+| PDF toolbox | `src/components/PdfToolbox.tsx` | [Merge, split and sign PDFs](https://gendocx.com/tools/pdf) |
+| Watermark | `src/components/WatermarkTool.tsx` | [Add a watermark to PDF or Word](https://gendocx.com/tools/watermark) |
+| Compare | `src/components/WordCompare.tsx` | [Compare two Word documents](https://gendocx.com/tools/compare) |
+| Editor | `src/components/WordEditor.tsx` | [Edit a Word document online](https://gendocx.com/tools/editor) |
+
 ## Why this exists
 
 Most "free online converter" sites upload your file to a server you cannot see. For a signed contract, an ID scan or an internal memo, that is a real risk — and you have no way to check what happens after the upload completes.
@@ -102,19 +115,6 @@ There is no upload endpoint to disable — the code never calls one:
 - `src/lib/docx-compare.worker.ts` runs the comparison engine off the main thread
 
 The only external URL in the UI is the link back to the hosted product.
-
-## Hosted versions
-
-If you would rather not install anything, the same tools run on the GenDocX site. Same code, same "files stay local" behaviour for the standalone tools.
-
-| Tool | Source | Hosted |
-|---|---|---|
-| Images → Word | `src/components/ImageToWord.tsx` | [Image to Word converter](https://gendocx.com/tools/images-to-docx) |
-| Markdown → Word | `src/components/MarkdownToWord.tsx` | [Markdown to Word](https://gendocx.com/tools/markdown-to-docx) |
-| PDF toolbox | `src/components/PdfToolbox.tsx` | [Merge, split and sign PDFs](https://gendocx.com/tools/pdf) |
-| Watermark | `src/components/WatermarkTool.tsx` | [Add a watermark to PDF or Word](https://gendocx.com/tools/watermark) |
-| Compare | `src/components/WordCompare.tsx` | [Compare two Word documents](https://gendocx.com/tools/compare) |
-| Editor | `src/components/WordEditor.tsx` | [Edit a Word document online](https://gendocx.com/tools/editor) |
 
 ## Relationship to GenDocX
 
