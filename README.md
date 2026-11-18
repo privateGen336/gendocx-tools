@@ -55,8 +55,6 @@ Removing a watermark only makes sense on documents you own. Don't use it to pass
 
 ### Compare Word documents
 
-![Two document versions with removed and added lines marked in red and green](./docs/images/compare-word-documents.jpg)
-
 - Drop an original and a modified `.docx`
 - Every revision is listed with its type — insert, delete, format, move
 - Jump between changes in the document preview
