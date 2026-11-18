@@ -259,7 +259,7 @@ body {
   color: var(--color-primary);
 }
 
-/* Five tabs need ~480px of labels, so they collapse to icons earlier than the
+/* Six tabs need ~580px of labels, so they collapse to icons earlier than the
    brand does. Every tab keeps its aria-label and title when the text is hidden. */
 @media (max-width: 980px) {
   .tool-tab span {

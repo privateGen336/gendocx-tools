@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Browser-only document tools: images to Word, PDF merge/split/rotate/sign. No upload, no server.",
+  "description": "Browser-only document tools: images to Word, Markdown to DOCX, PDF merge/split/sign, watermark, DOCX compare, Word editor. No upload, no server.",
   "license": "MIT",
   "scripts": {
     "dev": "vite",
