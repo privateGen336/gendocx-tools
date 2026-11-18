@@ -1,5 +1,7 @@
 # GenDocX Tools
 
+[![build](https://github.com/privateGen336/gendocx-tools/actions/workflows/build.yml/badge.svg)](https://github.com/privateGen336/gendocx-tools/actions/workflows/build.yml)
+
 **Six document tools that run entirely in your browser. Nothing is uploaded, nothing is stored, no account required.**
 
 Convert images to Word, turn Markdown into a styled `.docx`, merge and sign PDFs, stamp watermarks on DOCX/PDF, compare two versions of a contract, and edit a `.docx` — all with the network panel open and silent.

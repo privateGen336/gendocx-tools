@@ -1,5 +1,7 @@
 # GenDocX Tools
 
+[![build](https://github.com/privateGen336/gendocx-tools/actions/workflows/build.yml/badge.svg)](https://github.com/privateGen336/gendocx-tools/actions/workflows/build.yml)
+
 **六个纯浏览器文档工具：文件不上传、不落盘、不需要账号。**
 
 图片拼成 Word、Markdown 转成有版式的 `.docx`、PDF 合并签名、给 PDF/Word 加水印、对比两版合同、直接编辑 `.docx` —— 打开 Network 面板操作，它一直是安静的。

@@ -1,0 +1,29 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # `npm ci` rather than `install`: the lockfile is committed, so this fails
+      # loudly if it ever drifts from package.json instead of silently resolving
+      # something else.
+      - run: npm ci
+
+      # The build script runs `tsc --noEmit` first, so a type error fails here
+      # before vite ever bundles.
+      - run: npm run build
