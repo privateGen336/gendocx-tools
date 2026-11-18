@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowDownToLine, FileCode2, LockKeyhole, Upload } from 'lucide-react'
-import { useT } from '../i18n'
+import { useLang, useT } from '../i18n'
 import { markdownToDocxBlob, TEMPLATE_IDS, type TemplateId } from '../lib/markdown-to-docx'
 import styles from '../styles/markdown-to-word.module.css'
 
@@ -17,6 +17,7 @@ function safeName(markdown: string): string {
 
 export default function MarkdownToWord() {
   const t = useT('markdownToWord')
+  const { lang } = useLang()
   const [value, setValue] = useState('')
   const [template, setTemplate] = useState<TemplateId>('standard')
   const [busy, setBusy] = useState(false)
@@ -46,7 +47,7 @@ export default function MarkdownToWord() {
       const current = ++seq.current
       setRendering(true)
       try {
-        const blob = await markdownToDocxBlob(markdown, tpl)
+        const blob = await markdownToDocxBlob(markdown, tpl, lang)
         if (current !== seq.current) return
         const { renderAsync } = await import('docx-preview')
         if (current !== seq.current) return
@@ -65,7 +66,7 @@ export default function MarkdownToWord() {
         if (current === seq.current) setRendering(false)
       }
     },
-    [t],
+    [t, lang],
   )
 
   useEffect(() => {
@@ -95,7 +96,7 @@ export default function MarkdownToWord() {
     }
     setBusy(true)
     try {
-      const blob = await markdownToDocxBlob(value, template)
+      const blob = await markdownToDocxBlob(value, template, lang)
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url

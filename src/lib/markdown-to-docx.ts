@@ -10,11 +10,11 @@ export type TemplateId = 'standard' | 'compact' | 'report' | 'official'
  * Sizes are in points — the library converts them to docx half-points. Fonts
  * are written as ascii + hAnsi + eastAsia families; 宋体 / 黑体 / 仿宋 ship with
  * every Chinese-capable Windows and macOS install, so Word does not fall back
- * to Calibri mid-paragraph.
+ * to Calibri mid-paragraph. Latin documents get their own pairing — see
+ * `FONTS` — because SimSun's Latin glyphs are narrow and dated next to any
+ * English body copy.
  */
 const BASE: Partial<IMarkdownTheme> = {
-  bodyFont: '宋体',
-  headingFont: '黑体',
   codeFont: 'Consolas',
   heading1: '000000',
   heading2: '000000',
@@ -99,7 +99,6 @@ const TEMPLATES: Record<TemplateId, Partial<IMarkdownTheme>> = {
    */
   official: {
     ...BASE,
-    bodyFont: '仿宋',
     bodySize: 16,
     heading1Size: 22,
     heading2Size: 16,
@@ -119,6 +118,52 @@ const TEMPLATES: Record<TemplateId, Partial<IMarkdownTheme>> = {
 export const TEMPLATE_IDS = ['standard', 'compact', 'report', 'official'] as const
 
 /**
+ * Typeface pairs by script.
+ *
+ * The Chinese set is the conventional one: 宋体 body, 黑体 headings, 仿宋 for
+ * official documents. Latin copy gets Georgia for body text and Arial for
+ * headings — both ship with Windows and macOS, so nothing waits on a webfont,
+ * and neither is SimSun's narrow Latin fallback, which is what an English
+ * document would otherwise render in.
+ */
+const FONTS = {
+  zh: { body: '宋体', heading: '黑体', officialBody: '仿宋' },
+  latin: { body: 'Georgia', heading: 'Arial', officialBody: 'Times New Roman' },
+} as const
+
+/**
+ * 三号 (16pt) is the Chinese official-document standard and far too large for a
+ * Latin page, where all-levels-equal headings read as a mistake. The official
+ * preset therefore scales by script rather than sharing one size ladder.
+ */
+const OFFICIAL_SIZES = {
+  zh: { bodySize: 16, heading1Size: 22, heading2Size: 16, heading3Size: 16, heading4Size: 16, heading5Size: 16, heading6Size: 16, codeSize: 12 },
+  latin: { bodySize: 12, heading1Size: 18, heading2Size: 14, heading3Size: 12, heading4Size: 12, heading5Size: 12, heading6Size: 12, codeSize: 10 },
+} as const
+
+const themeCache = new Map<string, Partial<IMarkdownTheme>>()
+
+/**
+ * A preset resolved for one script. Cached because the conversion runs on every
+ * pause in typing, and the object is read-only once built.
+ */
+export function themeFor(template: TemplateId, locale: string): Partial<IMarkdownTheme> {
+  const script = locale.toLowerCase().startsWith('zh') ? 'zh' : 'latin'
+  const key = `${template}:${script}`
+  const cached = themeCache.get(key)
+  if (cached) return cached
+
+  const theme: Partial<IMarkdownTheme> = {
+    ...TEMPLATES[template],
+    headingFont: FONTS[script].heading,
+    bodyFont: template === 'official' ? FONTS[script].officialBody : FONTS[script].body,
+  }
+  if (template === 'official') Object.assign(theme, OFFICIAL_SIZES[script])
+  themeCache.set(key, theme)
+  return theme
+}
+
+/**
  * Markdown → .docx, straight from the AST.
  *
  * This replaces a hand-written HTML→docx walker: that one rendered Markdown to
@@ -130,8 +175,12 @@ export const TEMPLATE_IDS = ['standard', 'compact', 'report', 'official'] as con
  * are the largest thing this page ships, and a visitor who only reads the
  * placeholder never needs them.
  */
-export async function markdownToDocxBlob(markdown: string, template: TemplateId): Promise<Blob> {
-  const theme = TEMPLATES[template]
+export async function markdownToDocxBlob(
+  markdown: string,
+  template: TemplateId,
+  locale = 'zh'
+): Promise<Blob> {
+  const theme = themeFor(template, locale)
   const doc = await markdownDocx(markdown, {
     theme,
     gfm: true,
@@ -159,7 +208,7 @@ async function finalize(blob: Blob, theme: Partial<IMarkdownTheme>, template: Te
     let docXml = await docPart.async('string')
     docXml = addTableBorders(docXml, String(theme.border ?? 'BFBFBF'))
     docXml = pushRunStyles(docXml, theme)
-    if (template === 'official') docXml = addFirstLineIndent(docXml)
+    if (template === 'official') docXml = addFirstLineIndent(docXml, Number(theme.bodySize ?? 16))
   zip.file('word/document.xml', docXml)
   }
 
@@ -271,16 +320,17 @@ function pushRunStyles(xml: string, theme: Partial<IMarkdownTheme>): string {
 /**
  * Two-character first-line indent, official template only.
  *
- * GB/T 9704 sets the body indent by character rather than by a gap between
+ * Official documents indent by character rather than by a gap between
  * paragraphs — which is why that template zeroes `spaceSize`. docx has no
- * character-relative indent, so the value is pinned to two 16pt characters
- * (640 twips), matching that template's body size.
+ * character-relative indent, so the value is derived from the body size: two
+ * characters of 16pt body is 640 twips, of 12pt body 480.
  */
-function addFirstLineIndent(xml: string): string {
+function addFirstLineIndent(xml: string, bodySize: number): string {
+  const twips = Math.round(bodySize * 2 * 20)
   return xml.replace(
     /<w:pPr>([\s\S]*?<w:pStyle w:val="MdParagraph"\/>[\s\S]*?)<\/w:pPr>/g,
     (match, inner: string) =>
-      inner.includes('<w:ind ') ? match : `<w:pPr>${inner}<w:ind w:firstLine="640"/></w:pPr>`
+      inner.includes('<w:ind ') ? match : `<w:pPr>${inner}<w:ind w:firstLine="${twips}"/></w:pPr>`
   )
 }
 
@@ -369,5 +419,4 @@ function applyTheme(styles: string, theme: Partial<IMarkdownTheme>): string {
   }
   return out
 }
-
 
