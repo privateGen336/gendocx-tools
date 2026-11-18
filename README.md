@@ -6,6 +6,8 @@ Convert images to Word, turn Markdown into a styled `.docx`, merge and sign PDFs
 
 [中文说明](./README.zh-CN.md) · [Hosted version](https://gendocx.com/tools)
 
+![Six document tools illustrated inside a browser window](./docs/images/browser-document-tools.jpg)
+
 ---
 
 ## Why this exists
@@ -52,6 +54,8 @@ The code is MIT-licensed. Read it, audit it, fork it, or ship it inside your own
 Removing a watermark only makes sense on documents you own. Don't use it to pass off someone else's work.
 
 ### Compare Word documents
+
+![Two document versions with removed and added lines marked in red and green](./docs/images/compare-word-documents.jpg)
 
 - Drop an original and a modified `.docx`
 - Every revision is listed with its type — insert, delete, format, move

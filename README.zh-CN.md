@@ -6,6 +6,8 @@
 
 [English](./README.md) · [在线版](https://gendocx.com/zh/tools)
 
+![浏览器窗口中的六种文档工具](./docs/images/browser-document-tools.jpg)
+
 ---
 
 ## 为什么做这个
@@ -52,6 +54,8 @@
 「去水印」只对你自己拥有的文档有意义，别拿它去冒用别人的成果。
 
 ### Word 文档对比
+
+![两版文档用红色与绿色标记删改内容](./docs/images/compare-word-documents.jpg)
 
 - 放入原始版和修改版两个 `.docx`
 - 逐条列出版式修订及其类型：插入、删除、格式变更、移动
